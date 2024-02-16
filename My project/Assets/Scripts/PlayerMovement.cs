@@ -6,8 +6,17 @@ public class PlayerMovement : MonoBehaviour
 {
     [Header("Movement")]
     public float movementSpeed;
-
     public float groundDrag;
+
+    [Header("Jump")]
+    public float jumpForce;
+    public float jumpCooldown;
+    public float airMultiplier;
+    bool readyToJump;
+
+    public KeyCode jumpKey=KeyCode.Space;
+
+
     [Header("Ground Check")]
     public float playerHeight;
     public LayerMask ground;
@@ -27,19 +36,28 @@ public class PlayerMovement : MonoBehaviour
     {
         rb=GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+        readyToJump = true;
     }
 
     private void FixedUpdate()
+    {
+        MovePlayer();
+
+    }
+
+    // Update is called once per frame
+    private void Update()
     {
         //prinu element este pozitia jucatorului
         //al doilea este directia in care calculam, fiind in jos
         //a 3-a este distanta pana la obiectul cu care facem coliziune, astfel in cazul de fata este jumate +0.2 din inaltima playerului
         //a 4-a este un tag/LayerMask pentru ca LayerMask pentru ca asta cere care reprezinta efectiv pe obiectul cu care fac contact
         grounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 0.2f, ground);
-
-        MovePlayer();
-
-        if (grounded) 
+        
+        MyPlayerInput();
+        SpeedControl();
+        //JumpControl();
+        if (grounded)
         {
             rb.drag = groundDrag;
         }
@@ -48,22 +66,66 @@ public class PlayerMovement : MonoBehaviour
             rb.drag = 0;
         }
     }
-    // Update is called once per frame
-    private void Update()
-    {
-
-        MyPlayerInput();   
-    }
 
     private void MyPlayerInput()
     {
         horizontalInput = UnityEngine.Input.GetAxisRaw("Horizontal");
         verticalInput= UnityEngine.Input.GetAxisRaw("Vertical");
+
+        if (Input.GetKey(jumpKey) && readyToJump && grounded)
+        {
+            readyToJump = false;
+
+            Jump();
+
+            Invoke(nameof(ResetJump), jumpCooldown);
+        }
     }
 
     private void MovePlayer()
     {
         movingDirection = orientation.forward * verticalInput + orientation.right*horizontalInput;
-        rb.AddForce(movingDirection.normalized*movementSpeed*10f,ForceMode.Force);
+
+       
+        if (grounded)
+        {
+            rb.AddForce(movingDirection.normalized * movementSpeed * 10f, ForceMode.Force);
+        }
+        else if (!grounded)
+        {
+            //daca esti in aer se inmulteste cu airMultiplaier ca sa se modifice viteza in timp ce esti in aer (fie mai mica fie mai mare)
+            rb.AddForce(movingDirection.normalized * movementSpeed * 10f * airMultiplier, ForceMode.Force);
+        }
+    }
+
+    private void SpeedControl()
+    {
+        Vector3 flatVel = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
+        if (flatVel.magnitude > movementSpeed)
+        {
+            Vector3 limitedVel = flatVel.normalized * movementSpeed;
+            rb.velocity = new Vector3(limitedVel.x, limitedVel.y, limitedVel.z);
+        }
+    }
+    //private void JumpControl()
+    //{
+    //    Vector3 flatVel = new Vector3(rb.velocity.x, rb.velocity.y, rb.velocity.z);
+    //    if (flatVel.magnitude > jumpForce)
+    //    {
+    //        Vector3 limitedVel = flatVel.normalized * jumpForce;
+    //        rb.velocity = new Vector3(limitedVel.x, limitedVel.y, limitedVel.z);
+    //    }
+    //}
+    private void Jump()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z); 
+       
+        rb.AddForce(transform.up*jumpForce, ForceMode.Impulse);
+       
+    }
+
+    private void ResetJump()
+    {
+        readyToJump = true;
     }
 }
