@@ -223,10 +223,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1598025383631164317}
-  - component: {fileID: 4781377148320833976}
   - component: {fileID: 6935994221206992494}
   - component: {fileID: 5075034567721904319}
-  - component: {fileID: -4494551982024077381}
+  - component: {fileID: -4139802076137181316}
   m_Layer: 0
   m_Name: CollectableMaterial
   m_TagString: Untagged
@@ -253,33 +252,6 @@ Transform:
   - {fileID: 8500740285486998961}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!54 &4781377148320833976
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5840500268530137191}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &6935994221206992494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -292,6 +264,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5485951c1dacdd14fa513306965f9303, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerInRange: 0
   objectName: Red Diamond
 --- !u!65 &5075034567721904319
 BoxCollider:
@@ -312,9 +285,9 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 1.4, y: 1.4, z: 1.4}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!65 &-4494551982024077381
+--- !u!65 &-4139802076137181316
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
